@@ -3,7 +3,7 @@ import './App.css';
 import { Auth } from "./components/auth";
 import { db } from "./config/firebase";
 import { useEffect, useState } from 'react';
-import { getDocs, collection, addDoc, deleteDoc, doc } from "firebase/firestore";
+import { getDocs, collection, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
 
 function App() {
   const [thumbnailList, setThumbnailList] = useState([]);
@@ -11,6 +11,8 @@ function App() {
   const [newThumbnailName, setNewThumbnailName] = useState("");
   const [newReleaseDate, setNewReleaseDate] = useState(0);
   const [isTrending, setIsTrending] = useState(false);
+
+  const [updatedName, setUpdatedName] = useState("");
 
   const thumbnailCollectionRef = collection(db, "thumbnail");
 
@@ -28,6 +30,11 @@ function App() {
   const deleteThumbnail = async (id) => {
     const thumbnailDoc = doc(db, "thumbnail", id);
     await deleteDoc(thumbnailDoc);
+  }
+
+  const updateThumbnailName = async (id) => {
+    const thumbnailDoc = doc(db, "thumbnail", id);
+    await updateDoc(thumbnailDoc, { name: updatedName  });
   }
 
   useEffect(() => {
@@ -62,6 +69,8 @@ function App() {
             <h1 style={{color: thumbnail.trending ? "green" : "red"}}>{thumbnail.name}</h1>
             <p>{thumbnail.releaseDate}</p>
             <button onClick={() => deleteThumbnail(thumbnail.id)}>Delete Thumbnail</button>
+            <input placeholder='New Name...' onChange={(e) => setUpdatedName(e.target.value)} />
+            <button onClick={() => updateThumbnailName(thumbnail.id)}>Update Name</button>
           </div>
         ))}
       </div>  
