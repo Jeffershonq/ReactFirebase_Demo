@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import { Auth } from "./components/auth";
-import { db } from "./config/firebase";
+import { db, auth } from "./config/firebase";
 import { useEffect, useState } from 'react';
 import { getDocs, collection, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
 
@@ -46,7 +46,8 @@ function App() {
       await addDoc(thumbnailCollectionRef, {
         name: newThumbnailName, 
         releaseDate: newReleaseDate, 
-        trending: isTrending});
+        trending: isTrending,
+        userid: auth?.currentUser?.uid});
 
         getThumbnailList();
     } catch (err) {
